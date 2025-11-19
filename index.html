@@ -3,97 +3,450 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lab Website</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>Grosh Lab | University of Michigan Ann Arbor</title>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
+    /* ===== GLOBAL STYLES ===== */
+    * {
+      box-sizing: border-box;
     }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      width: 100%;
+      font-family: 'Open Sans', Arial, sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    a {
+      text-decoration: none;
+      color: #0055aa;
+      word-break: break-word;
+    }
+
+    /* ===== NAVBAR ===== */
     .navbar {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       padding: 10px 20px;
       background-color: #00274C;
       color: white;
+      position: relative;
     }
+
     .navbar img {
       height: 40px;
       margin-right: 15px;
     }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .hamburger {
+      display: none;
+      font-size: 32px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: white;
+    }
+
+    /* ===== CONTAINER ===== */
     .container {
       display: flex;
       height: calc(100vh - 60px);
+      width: 100%;
+      max-width: 100%;
     }
+
+    /* ===== SIDEBAR ===== */
     .sidebar {
-      width: 25%;
+      width: 20%;
       background-color: #f4f4f4;
-      padding: 20px;
+      padding: 40px;
+/*      padding-top: 40px;*/
       border-right: 1px solid #ccc;
       overflow-y: auto;
+      transition: transform 0.3s ease;
+      word-wrap: break-word;
     }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      font-size: 18px;
+    }
+
     .main {
-      width: 75%;
-      padding: 20px;
+      width: 80%;
+      padding: 40px;
       overflow-y: auto;
+      word-wrap: break-word;
     }
+
+    h1 {
+      color: #d1dce4;
+    }
+
     h2 {
       margin-top: 0;
     }
+
+    p, ul, li {
+      font-size: 18px;
+    }
+
     .project-link {
       margin-bottom: 10px;
     }
-    .project-link a {
-      text-decoration: none;
-      color: #0055aa;
-    }
+
     .section-title {
       font-weight: bold;
       margin-top: 20px;
     }
+
+    .close-btn {
+      display: none; /* desktop only */
+    }
+
+    /* Collapsible buttons */
+    .collapsible {
+      background: none;
+      border: none;
+      color: #0055aa;
+      cursor: pointer;
+      font-size: 18px;
+      padding: 5px 0;
+      width: 100%;
+      text-align: left;
+      position: relative;
+      transition: color 0.2s ease;
+      font-family: 'Open Sans', Arial, sans-serif;
+    }
+
+    .sidebar ul li a:hover {
+      color: #009688; /* same hover color as collapsible buttons */
+    }
+
+    .collapsible:hover {
+      color: #009688;
+    }
+
+    /* Arrow */
+    .collapsible:after {
+      content: '\25B6';
+      position: absolute;
+      right: 0;
+      font-size: 12px;
+      transition: transform 0.3s ease;
+      margin-top: 5px;
+    }
+
+    .collapsible.active:after {
+      content: '\25B2';
+      transform: rotate(180deg);
+    }
+
+    /* Collapsible content with smooth transition */
+    .collapsible-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      list-style: none;
+      padding-left: 15px;
+    }
+
+    .collapsible-content li {
+      padding-left: 20px;
+    }
+
+    /* ===== MOBILE STYLES ===== */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .main {
+        width: 100%;
+        padding: 20px;
+      }
+
+      /* SIDEBAR SLIDE-IN */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 80vw; /* 80% of viewport width */
+        max-width: 250px;
+        transform: translateX(-100%);
+        z-index: 1000;
+        box-shadow: 2px 0 8px rgba(0,0,0,0.3);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .hamburger {
+        display: block;
+      }
+
+      /* OVERLAY */
+      .overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.4);
+        z-index: 900;
+      }
+
+      .overlay.active {
+        display: block;
+      }
+
+      /* CLOSE BUTTON INSIDE SIDEBAR */
+      .close-btn {
+        display: block;
+        font-size: 26px;
+        cursor: pointer;
+        background: none;
+        border: none;
+        float: right;
+        margin-top: -10px;
+        margin-right: -10px;
+      }
+    }
+
+    /* ===== LISTS ===== */
+    ol, ul {
+      padding-left: 20px;
+      max-width: 100%;
+    }
+
+    /* Footer inside main content, full width */
+    .main-footer {
+      display: block;
+      width: calc(100% + 80px); /* 100% + left+right padding of .main */
+      background-color: #00274C;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-family: 'Open Sans', Arial, sans-serif;
+      margin-top: 50px;
+      margin-bottom: -40px;
+      margin-left: -40px;
+      border-radius: 0; /* optional: remove rounding if you want full-width */
+    }
+
+    .main-footer a {
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    .main-footer a:hover {
+      color: #a0c4ff;
+    }
+
   </style>
 </head>
 <body>
+
+  <!-- ===== NAVBAR ===== -->
   <div class="navbar">
-    <img src="logo.png" alt="Lab Logo" />
-    <h1>University Lab</h1>
+    <div class="nav-left">
+      <img src="logo5.png" alt="Lab Logo" />
+      <h1>Grosh Lab</h1>
+    </div>
+    <button class="hamburger" onclick="openMenu()">☰</button>
   </div>
 
+  <!-- MOBILE OVERLAY -->
+  <div class="overlay" onclick="closeMenu()" id="overlay"></div>
+
   <div class="container">
-    <div class="sidebar">
+    <!-- ===== SIDEBAR ===== -->
+    <!-- Sidebar snippet -->
+    <div class="sidebar" id="sidebar">
+      <button style="margin-top: 2.5px" class="close-btn" onclick="closeMenu()">×</button>
       <h2>Contents</h2>
       <ul>
-        <li><a href="#overview">Overview</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#members">Members</a></li>
+        <li style="margin-bottom: 12.5px;"><a href="https://sites.google.com/a/umich.edu/groshlab/home" target="_blank" onclick="closeMenu()">Homepage</a></li>
+        <li style="margin-bottom: 7.5px;"><a href="#overview" onclick="closeMenu()">Lab Overview</a></li>
+        
+        <!-- Collapsible public projects -->
+        <li>
+          <button class="collapsible">Public Projects</button>
+          <ul class="collapsible-content">
+            <li><a href="#pubProjects1" onclick="closeMenu()">HairBundleLab</a></li>
+            <li><a href="#pubProjects2" onclick="closeMenu()">IHC Stuff</a></li>
+            <li><a href="#pubProjects3" onclick="closeMenu()">Penny's Codes</a></li>
+            <li><a href="#pubProjects4" onclick="closeMenu()">Vipin's Codes</a></li>
+            <li><a href="#pubProjects5" onclick="closeMenu()">Wen's Codes</a></li>
+            <li><a href="#pubProjects6" onclick="closeMenu()">Weiyuan's Codes</a></li>
+            <li><a href="#pubProjects7" onclick="closeMenu()">Yuetong's Codes</a></li>
+          </ul>
+        </li>
+
+        <!-- Collapsible internal projects -->
+        <li>
+          <button class="collapsible">Internal Projects</button>
+          <ul class="collapsible-content">
+            <li><a href="#priProjects1" onclick="closeMenu()">Genetic Algorithm</a></li>
+            <li><a href="#priProjects2" onclick="closeMenu()">Penny's Codes</a></li>
+            <li><a href="#priProjects3" onclick="closeMenu()">Vipin's Codes</a></li>
+            <li><a href="#priProjects4" onclick="closeMenu()">Wen's Codes</a></li>
+            <li><a href="#priProjects5" onclick="closeMenu()">Weiyuan's Codes</a></li>
+            <li><a href="#priProjects6" onclick="closeMenu()">Yuetong's Codes</a></li>
+          </ul>
+        </li>
       </ul>
     </div>
 
+    <!-- ===== MAIN CONTENT ===== -->
     <div class="main">
       <section id="overview">
-        <h2>Overview</h2>
-        <p>Welcome to the University Lab website. This page provides an overview of ongoing research projects, student contributions, and internal resources.</p>
+        <h2>Lab Overview</h2>
+        <p>Welcome to the Grosh Lab. This page provides an overview of the numerical frameworks developed over the past several years. Each project, along with its associated code and documentation, is maintained in a dedicated GitHub repository, with links provided below. This site serves as a centralized reference for all lab projects, some publicly accessible and others available only to authorized collaborators. Additional information about ongoing research activities can be found on our <a href="https://sites.google.com/a/umich.edu/groshlab/home" target="_blank">homepage</a>.</p>
+      </section>
+      <br>
+      <section id="pubProjects">
+        <h2>Public Projects</h2>
+        <p>Below are links to active <i>public</i> project repositories.</p>
+        <ol>
+          <li>
+            <div class="project-link" id="pubProjects1">
+              <a href="https://github.com/vgoyal24/HairBundleLab">HairBundleLab</a>
+              <p>HairBundleLab is a specialized software designed to simulate mammalian cochlear hair bundle responses, offering a platform to explore and visualize their intricate processes. Users can define mechanical, electrical, and geometric parameters to match experimental needs, making it a versatile tool for studying these essential auditory mechanisms.</p>
+            </div>
+          </li>
+          <li>
+            <div class="project-link" id="pubProjects2">
+              <a href="#">IHC Stuff</a> 
+            </div>
+          </li>
+          <li>
+            <div class="project-link" id="pubProjects3">
+              <a href="#">Penny's Codes</a> 
+            </div>
+          </li>
+          <li>
+            <div class="project-link" id="pubProjects4">
+              <a href="#">Vipin's Codes</a> 
+            </div>
+          </li>
+          <li>
+            <div class="project-link" id="pubProjects5">
+              <a href="#">Wen's Codes</a> 
+            </div>
+          </li>
+          <li>
+            <div class="project-link" id="pubProjects6">
+              <a href="#">Weiyuan's Codes</a> 
+            </div>
+          </li>
+          <li>
+            <div class="project-link" id="pubProjects7">
+              <a href="#">Yuetong's Codes</a> 
+            </div>
+          </li>
+        </ol>
+      </section>
+      <br>
+      <section id="priProjects">
+        <h2>Internal Projects</h2>
+        <p>Below are links to <i>internal</i> project repositories.</p>
+        <ol>
+          <li>
+            <div class="project-link" id="priProjects1">
+              <a href="#">Genetic Algorithm for Data Fitting</a>
+              <p>This sample code performs parameter optimization for the three-row stereocilia model of the mammalian hair bundle, enabling quantitative fitting to experimental data. The framework is modular and can be readily adapted for other nonlinear or linear first-order, multi-degree-of-freedom systems. The repository includes detailed instructions to help you customize and implement the model for your specific requirements.</p>
+            </div>
+          </li>
+          <li>
+            <div class="project-link" id="priProjects2">
+              <a href="#">Penny's Codes</a> 
+            </div>
+          </li>
+          <li>
+            <div class="project-link" id="priProjects3">
+              <a href="#">Vipins's Codes</a> 
+            </div>
+          </li>
+          <li>
+            <div class="project-link" id="priProjects4">
+              <a href="#">Wen's Codes</a> 
+            </div>
+          </li>
+          <li>
+            <div class="project-link" id="priProjects5">
+              <a href="#">Weiyuan's Codes</a> 
+            </div>
+          </li>
+          <li>
+            <div class="project-link" id="priProjects6">
+              <a href="#">Yuetong's Codes</a> 
+            </div>
+          </li>
+        </ol>
       </section>
 
-      <section id="projects">
-        <h2>Projects</h2>
-        <p>Below are links to active and archived project repositories. Private repositories will only open for authorized GitHub collaborators.</p>
+      <!-- ===== FOOTER ===== -->
+      <footer class="main-footer">
+        <p>&copy; 2025 Grosh Lab, University of Michigan Ann Arbor</p>
+        <p>
+          <a href="https://me.engin.umich.edu/people/faculty/karl-grosh/" target="_blank">Contact</a> | 
+          <a href="https://sites.google.com/a/umich.edu/groshlab/home" target="_blank">Homepage</a>
+        </p>
+      </footer>
 
-        <div class="project-link">
-          <a href="https://github.com/username/project1">Student A — Project 1</a>
-        </div>
-        <div class="project-link">
-          <a href="https://github.com/username/project2">Student B — Project 2</a>
-        </div>
-        <div class="project-link">
-          <a href="https://github.com/username/private-project">Student C — Private Project</a> (requires collaborator access)
-        </div>
-      </section>
-
-      <section id="members">
-        <h2>Members</h2>
-        <p>List of lab members and their contributions.</p>
-      </section>
     </div>
   </div>
+
+
+  <!-- ===== SCRIPTS ===== -->
+  <script>
+    // Sidebar menu open/close
+    function openMenu() {
+      document.getElementById("sidebar").classList.add("open");
+      document.getElementById("overlay").classList.add("active");
+    }
+    function closeMenu() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.getElementById("overlay").classList.remove("active");
+    }
+
+    // Unified collapsible handler
+    document.querySelectorAll('.sidebar ul li button.collapsible').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const content = btn.nextElementSibling;
+
+        // Toggle collapsible
+        if (!btn.classList.contains('active')) {
+          btn.classList.add('active');
+          content.style.maxHeight = content.scrollHeight + "px";
+        } else {
+          btn.classList.remove('active');
+          content.style.maxHeight = null;
+        }
+
+        // Scroll to corresponding main section
+        let targetId = btn.textContent.trim() === "Public Projects" ? "pubProjects" : "priProjects";
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) {
+          targetSection.scrollIntoView({ behavior: "smooth" });
+        }
+      });
+    });
+
+  </script>
+
 </body>
 </html>
